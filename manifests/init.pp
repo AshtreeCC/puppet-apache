@@ -35,7 +35,7 @@ define addServer( $site, $root ) {
     }
 
     exec {"a2ensite $site":
-        command => '/usr/bin/a2ensite $site',
+        command => '/usr/sbin/a2ensite $site',
         require => File["$sitesavailable/$site"],
     }
 }
