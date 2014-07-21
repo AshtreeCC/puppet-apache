@@ -7,7 +7,10 @@ class apache::install {
 }
 
 class apache::configure {
-    
+    exec {"a2enmod rewrite":
+        command => '/usr/sbin/a2enmod rewrite',
+        require => Package['apache2'],
+    }
 }
 
 class apache::run {
@@ -22,10 +25,12 @@ class apache::run {
 
 define addServer( $site, $root ) {
     $sitesavailable = '/etc/apache2/sites-available'
+    $sitesenabled = '/etc/apache2/sites-enabled'
     $template = 'apache/vhost.erb'
-    $server_name = "$site"
+    $documentRoot = "$root"
+    $hostname = "$site"
 
-    file {"$sitesavailable/$site":
+    file {"$sitesavailable/$site.conf":
         content => template($template),
         owner   => 'root',
         group   => 'root',
@@ -36,7 +41,7 @@ define addServer( $site, $root ) {
 
     exec {"a2ensite $site":
         command => '/usr/sbin/a2ensite $site',
-        require => File["$sitesavailable/$site"],
+        require => File["$sitesavailable/$site.conf"],
     }
 }
 
