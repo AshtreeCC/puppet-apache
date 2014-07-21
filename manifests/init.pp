@@ -4,6 +4,11 @@ class apache::install {
         ensure => installed,
         require => Class['php']
     }
+
+    package { 'libapache2-mod-php5' :
+        ensure => installed,
+        require => Package['apache2']
+    }
 }
 
 class apache::configure {
